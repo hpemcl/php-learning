@@ -1,27 +1,44 @@
 <?php
-session_start();
-    $_SESSION;
 
-    //istedet for at jeg skal skrive min connection til min database, så kan jeg bruge en ekstra side som jeg skal koble til alle sider -
-    //derfor skriver jeg include, da den skal inkludere connection.php-filen på alle sider, så jeg kan få fat i min database på hvilken som helst php fil
+session_start();
     include("connection.php");
     include("functions.php");
 
+    if($_SERVER['REQUEST_METHOD'] == "POST")
+    {
+        //something was posted
+        $user_name = $_POST['user_name'];
+        $password = $_POST['password'];
+
+        if(!empty($user_name) && !empty($password) && !is_numeric($user_name))
+        {
+            //save to database
+            $user_id = random_num(20);
+            $query = "insert into users (user_id,user_name,password) values ('$user_id','$user_name','$password')";
+            
+            mysqli_query($query);
+
+            header("Location: login.php");
+            die;
+        
+        } else {
+            echo "Please enter some valid information!";
+        }
+    }
 ?>
-
-
 
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PHP Eksamen</title>
+    <title>Signup Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="./styles.css">
 </head>
-<body>
-    <!-- navbar -->
+<body class="bg-dark">
+
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg text-black bg-danger-subtle fw-medium fs-5">
         <div class="container-fluid">
             <a class="nav-link active" aria-current="page" href="index.php">
@@ -42,10 +59,10 @@ session_start();
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Settings
                         </a>
-                        <ul class="dropdown-menu ">
-                            <li><a class="dropdown-item fw-medium" href="./kunde.php">Login</a></li>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item fw-medium" href="./login.php">Login</a></li>
                             <li><a class="dropdown-item fw-medium" href="#">Help</a></li>
-                            <li><hr class="dropdown-divider "></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item fw-medium" href="#">FAQ</a></li>
                         </ul>
                     </li>
@@ -58,53 +75,40 @@ session_start();
         </div>
     </nav>
 
-    <!-- Hero section -->
-    <section class="text-center p-5 py-5">
-        <div class="container ">
-            <h1 class="display-4 fw-bold">Welcome to Our Shop</h1>
-            <p class="lead fw-medium">Discover amazing products at unbeatable prices.</p>
-            <a href="#" class="btn text-uppercase fw-medium btn-custom-primary btn-lg">Shop Now</a>
-        </div>
-    </section>
-
-    <!-- Featured Products section -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">Featured Products</h2>
-            <div class="row">
-                <?php while ($product = mysqli_fetch_assoc($featured)) : ?>
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <img src="<?= $product['image']; ?>" class="card-img-top img-edit" alt="<?= $product['title']; ?>">
-                            <div class="card-body">
-                                <h5 class="card-title"><?= $product['title']; ?></h5>
-                                <p class="card-text"><?= $product['description']; ?></p>
-                                <p class="card-text"><strong>Price: </strong>$<?= $product['prices']; ?></p>
-                                <a href="#" class="btn fw-medium btn-dark">Buy Now</a>
-                                <a href="./details.php">
-                                    <button type="button" class="btn fw-medium btn-more" data-toggle="modal" data-target="#details-1">More</button>
-                                </a>
+    <!-- Signup Form -->
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="row w-100">
+            <div class="col-md-6 mx-auto">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3 class="text-center mb-4">Sign Up</h3>
+                        <form method="post">
+                            <div class="mb-3 row">
+                                <label for="username" class="col-sm-3 col-form-label fw-medium">Username</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="username" required>
+                                </div>
                             </div>
-                        </div>
+                            <div class="mb-3 row">
+                                <label for="password" class="col-sm-3 col-form-label fw-medium">Password</label>
+                                <div class="col-sm-12">
+                                    <input type="password" class="form-control" id="password" required>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-custom-primary btn-lg">Login</button>
+                            </div>
+                            <p class="text-center mt-3">Already have an account?
+                                <a href="./signup.php" class="fw-medium">Log in</a>
+                            </p>
+                        </form>
+
                     </div>
-                <?php endwhile; ?>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center p-4">
-        <div class="container">
-            <p>&copy; 2024 Webshop. All rights reserved.</p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="#" class="text-white">Privacy Policy</a></li>
-                <li class="list-inline-item"><a href="#" class="text-white">Terms of Use</a></li>
-                <li class="list-inline-item"><a href="#" class="text-white">Contact Us</a></li>
-            </ul>
-        </div>
-    </footer>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>

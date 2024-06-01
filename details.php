@@ -1,4 +1,5 @@
 <?php
+//interaktion med min datapase med SQLI - her bruger jeg $con for at få fat i min database som jeg har skabt via localhost
 session_start();
     $_SESSION;
 
@@ -6,10 +7,7 @@ session_start();
     //derfor skriver jeg include, da den skal inkludere connection.php-filen på alle sider, så jeg kan få fat i min database på hvilken som helst php fil
     include("connection.php");
     include("functions.php");
-
 ?>
-
-
 
 <!doctype html>
 <html lang="en">
@@ -33,7 +31,7 @@ session_start();
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+                        <a class="nav-link" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Shop</a>
@@ -43,7 +41,7 @@ session_start();
                             Settings
                         </a>
                         <ul class="dropdown-menu ">
-                            <li><a class="dropdown-item fw-medium" href="./kunde.php">Login</a></li>
+                            <li><a class="dropdown-item fw-medium" href="#">Login</a></li>
                             <li><a class="dropdown-item fw-medium" href="#">Help</a></li>
                             <li><hr class="dropdown-divider "></li>
                             <li><a class="dropdown-item fw-medium" href="#">FAQ</a></li>
@@ -57,34 +55,20 @@ session_start();
             </div>
         </div>
     </nav>
-
-    <!-- Hero section -->
-    <section class="text-center p-5 py-5">
-        <div class="container ">
-            <h1 class="display-4 fw-bold">Welcome to Our Shop</h1>
-            <p class="lead fw-medium">Discover amazing products at unbeatable prices.</p>
-            <a href="#" class="btn text-uppercase fw-medium btn-custom-primary btn-lg">Shop Now</a>
-        </div>
-    </section>
-
+    
     <!-- Featured Products section -->
+    <?php while ($product = mysqli_fetch_assoc($featured)) : ?>
     <section class="py-5">
         <div class="container">
-            <h2 class="text-center mb-4">Featured Products</h2>
+            <h2 class="text-start text-uppercase fw-bold mb-4"><?= $product['title']; ?></h2>
             <div class="row">
-                <?php while ($product = mysqli_fetch_assoc($featured)) : ?>
                     <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <img src="<?= $product['image']; ?>" class="card-img-top img-edit" alt="<?= $product['title']; ?>">
-                            <div class="card-body">
-                                <h5 class="card-title"><?= $product['title']; ?></h5>
-                                <p class="card-text"><?= $product['description']; ?></p>
-                                <p class="card-text"><strong>Price: </strong>$<?= $product['prices']; ?></p>
-                                <a href="#" class="btn fw-medium btn-dark">Buy Now</a>
-                                <a href="./details.php">
-                                    <button type="button" class="btn fw-medium btn-more" data-toggle="modal" data-target="#details-1">More</button>
-                                </a>
-                            </div>
+                        <img src="<?= $product['image']; ?>" class="card-img-top img-edit" alt="<?= $product['title']; ?>">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= $product['title']; ?></h5>
+                            <p class="card-text"><?= $product['description']; ?></p>
+                            <p class="card-text"><strong>Price: </strong>$<?= $product['prices']; ?></p>
+                            <a href="#" class="btn fw-medium btn-dark">Buy Now</a>
                         </div>
                     </div>
                 <?php endwhile; ?>
