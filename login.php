@@ -1,5 +1,48 @@
 <?php
+session_start();
+include("connection.php");
+include("functions.php");
 
+$error_message = ""; // Initialize an empty error message variable
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    // something was posted
+    $user_name = $_POST['user_name'];
+    $password = $_POST['password'];
+
+    if (!empty($user_name) && !empty($password) && !is_numeric($user_name)) {
+        // read from database
+        $query = "SELECT * FROM users WHERE user_name = '$user_name' LIMIT 1";
+        
+        $result = mysqli_query($con, $query);
+
+        if ($result) {
+            if (mysqli_num_rows($result) > 0) {
+                // associative arrays
+                $user_data = mysqli_fetch_assoc($result);
+
+                if ($user_data['password'] === $password) {
+                    $_SESSION['user_id'] = $user_data['user_id'];
+                    // Check if the user is an admin
+                    if ($user_data['admin'] == 1) {
+                        header("Location: admin.php");
+                    } else {
+                        header("Location: kunde.php");
+                    }
+                    die;
+                } else {
+                    $error_message = '<span class="error-message">Incorrect password!</span>';
+                }
+            } else {
+                $error_message = '<span class="error-message">Username not found!</span>';
+            }
+        } else {
+            $error_message = '<span class="error-message">Database query failed!</span>';
+        }
+    } else {
+        $error_message = '<span class="error-message">Please enter some valid information!</span>';
+    }
+}
 ?>
 
 <!doctype html>
@@ -13,7 +56,7 @@
 </head>
 <body class="bg-dark">
 
-    <!-- navbar -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg text-black bg-danger-subtle fw-medium fs-5">
         <div class="container-fluid">
             <a class="nav-link active" aria-current="page" href="index.php">
@@ -34,15 +77,15 @@
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Settings
                         </a>
-                        <ul class="dropdown-menu ">
+                        <ul class="dropdown-menu">
                             <li><a class="dropdown-item fw-medium" href="./login.php">Login</a></li>
                             <li><a class="dropdown-item fw-medium" href="#">Help</a></li>
-                            <li><hr class="dropdown-divider "></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item fw-medium" href="#">FAQ</a></li>
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
+                <form class="d-flex me-auto w-50" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>
@@ -57,24 +100,29 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <h3 class="text-center mb-4">Login</h3>
-                        <form method="post">
+                        <form method="post" autocomplete="off">
                             <div class="mb-3 row">
                                 <label for="username" class="col-sm-3 col-form-label fw-medium">Username</label>
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="username" required>
+                                    <input type="text" name="user_name" class="form-control" id="username" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="password" class="col-sm-3 col-form-label fw-medium">Password</label>
                                 <div class="col-sm-12">
-                                    <input type="password" class="form-control" id="password" required>
+                                    <input type="password" name="password" class="form-control" id="password" required>
                                 </div>
                             </div>
+                            <?php if (!empty($error_message)): ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <?= $error_message ?>
+                                </div>
+                            <?php endif; ?>
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-custom-primary btn-lg">Login</button>
                             </div>
-                            <p class="text-center mt-3">Don't have an account? 
-                                <a href="./signup.php">Sign Up</a>
+                            <p class="text-center mt-3">Don't have an account?
+                                <a href="./signup.php" class="fw-medium">Sign up</a>
                             </p>
                         </form>
                     </div>

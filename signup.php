@@ -1,30 +1,30 @@
 <?php
-
 session_start();
-    include("connection.php");
-    include("functions.php");
+include("connection.php");
+include("functions.php");
 
-    if($_SERVER['REQUEST_METHOD'] == "POST")
-    {
-        //something was posted
-        $user_name = $_POST['user_name'];
-        $password = $_POST['password'];
+$error_message = ""; // Initialize an empty error message variable
 
-        if(!empty($user_name) && !empty($password) && !is_numeric($user_name))
-        {
-            //save to database
-            $user_id = random_num(20);
-            $query = "insert into users (user_id,user_name,password) values ('$user_id','$user_name','$password')";
-            
-            mysqli_query($query);
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    // something was posted
+    $user_name = isset($_POST['user_name']) ? $_POST['user_name'] : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
 
+    if (!empty($user_name) && !empty($password) && !is_numeric($user_name)) {
+        // save to database
+        $user_id = random_num(20);
+        $query = "INSERT INTO users (user_id, user_name, password) VALUES ('$user_id', '$user_name', '$password')";
+        
+        if (mysqli_query($con, $query)) {
             header("Location: login.php");
             die;
-        
         } else {
-            echo "Please enter some valid information!";
+            $error_message = '<span class="error-message">Database error: ' . mysqli_error($con) . '</span>';
         }
+    } else {
+        $error_message = '<span class="error-message">Please enter some valid information!</span>';
     }
+}
 ?>
 
 <!doctype html>
@@ -67,7 +67,7 @@ session_start();
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
+                <form class="d-flex me-auto w-50" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>
@@ -82,27 +82,31 @@ session_start();
                 <div class="card shadow">
                     <div class="card-body">
                         <h3 class="text-center mb-4">Sign Up</h3>
-                        <form method="post">
+                        <form method="post" autocomplete="off">
                             <div class="mb-3 row">
                                 <label for="username" class="col-sm-3 col-form-label fw-medium">Username</label>
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="username" required>
+                                    <input type="text" name="user_name" class="form-control" id="username" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="password" class="col-sm-3 col-form-label fw-medium">Password</label>
                                 <div class="col-sm-12">
-                                    <input type="password" class="form-control" id="password" required>
+                                    <input type="password" name="password" class="form-control" id="password" required>
                                 </div>
                             </div>
+                            <?php if (!empty($error_message)): ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <?= $error_message ?>
+                                </div>
+                            <?php endif; ?>
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-custom-primary btn-lg">Login</button>
+                                <button type="submit" class="btn btn-custom-primary btn-lg">Sign Up</button>
                             </div>
                             <p class="text-center mt-3">Already have an account?
-                                <a href="./signup.php" class="fw-medium">Log in</a>
+                                <a href="./login.php" class="fw-medium">Log in</a>
                             </p>
                         </form>
-
                     </div>
                 </div>
             </div>

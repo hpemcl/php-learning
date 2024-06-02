@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+- phpMyAdmin XML Dump
+- version 5.2.0
+- https://www.phpmyadmin.net
+-
+- Vært: 127.0.0.1:3306
+- Genereringstid: 02. 06 2024 kl. 20:51:33
+- Serverversion: 8.2.0
+- PHP-version: 8.2.0
+-->
+
+<pma_xml_export version="1.0" xmlns:pma="https://www.phpmyadmin.net/some_doc_url/">
+    <!--
+    - Structure schemas
+    -->
+    <pma:structure_schemas>
+        <pma:database name="php_learning" collation="utf8mb4_0900_ai_ci" charset="utf8mb4">
+            <pma:table name="brands">
+                CREATE TABLE `brands` (
+                  `id` int NOT NULL AUTO_INCREMENT,
+                  `brandname` varchar(255) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+            </pma:table>
+            <pma:table name="products">
+                CREATE TABLE `products` (
+                  `id` int NOT NULL AUTO_INCREMENT,
+                  `title` varchar(255) NOT NULL,
+                  `prices` decimal(10,2) NOT NULL,
+                  `brandname` varchar(100) NOT NULL,
+                  `image` varchar(255) NOT NULL,
+                  `description` text NOT NULL,
+                  `featured` tinyint NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+            </pma:table>
+            <pma:table name="users">
+                CREATE TABLE `users` (
+                  `id` bigint NOT NULL AUTO_INCREMENT,
+                  `user_id` bigint NOT NULL,
+                  `user_name` varchar(100) NOT NULL,
+                  `password` varchar(100) NOT NULL,
+                  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                  `admin` tinyint(1) DEFAULT &#039;0&#039;,
+                  PRIMARY KEY (`id`),
+                  KEY `user_id` (`user_id`),
+                  KEY `date` (`date`),
+                  KEY `user_name` (`user_name`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+            </pma:table>
+        </pma:database>
+    </pma:structure_schemas>
+
+    <!--
+    - Database: 'php_learning'
+    -->
+    <database name="php_learning">
+        <!-- Tabel brands -->
+        <table name="brands">
+            <column name="id">1</column>
+            <column name="brandname">Printed</column>
+        </table>
+        <!-- Tabel products -->
+        <table name="products">
+            <column name="id">2</column>
+            <column name="title">Printed Beige Hoodie</column>
+            <column name="prices">230.00</column>
+            <column name="brandname">Printed</column>
+            <column name="image">/eksamen/php-learning/images/printed_beige_hoodie.png</column>
+            <column name="description">A printed beige hoodie with a pink print</column>
+            <column name="featured">1</column>
+        </table>
+        <table name="products">
+            <column name="id">4</column>
+            <column name="title">Blue Jeans</column>
+            <column name="prices">300.00</column>
+            <column name="brandname">Jeans</column>
+            <column name="image">uploads/blue_jeans.png</column>
+            <column name="description">Blue Jeans</column>
+            <column name="featured">1</column>
+        </table>
+        <!-- Tabel users -->
+        <table name="users">
+            <column name="id">3</column>
+            <column name="user_id">5264980</column>
+            <column name="user_name">user1</column>
+            <column name="password">1234</column>
+            <column name="date">2024-06-02 19:05:45</column>
+            <column name="admin">0</column>
+        </table>
+        <table name="users">
+            <column name="id">4</column>
+            <column name="user_id">81914026</column>
+            <column name="user_name">user2</column>
+            <column name="password">1234</column>
+            <column name="date">2024-06-02 19:06:56</column>
+            <column name="admin">0</column>
+        </table>
+        <table name="users">
+            <column name="id">6</column>
+            <column name="user_id">3411537283288524183</column>
+            <column name="user_name">admin</column>
+            <column name="password">admin123</column>
+            <column name="date">2024-06-02 21:56:42</column>
+            <column name="admin">1</column>
+        </table>
+        <table name="users">
+            <column name="id">7</column>
+            <column name="user_id">680184545673680</column>
+            <column name="user_name">admin</column>
+            <column name="password">admin123</column>
+            <column name="date">2024-06-02 21:56:44</column>
+            <column name="admin">1</column>
+        </table>
+        <table name="users">
+            <column name="id">8</column>
+            <column name="user_id">77719182484513</column>
+            <column name="user_name">admin</column>
+            <column name="password">admin123</column>
+            <column name="date">2024-06-02 21:56:48</column>
+            <column name="admin">1</column>
+        </table>
+    </database>
+</pma_xml_export>

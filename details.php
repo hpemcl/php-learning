@@ -48,7 +48,7 @@ session_start();
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
+                <form class="d-flex me-auto w-50" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>

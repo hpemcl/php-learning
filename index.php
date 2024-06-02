@@ -1,14 +1,14 @@
 <?php
 session_start();
-    $_SESSION;
+include("connection.php");
+include("functions.php");
 
-    //istedet for at jeg skal skrive min connection til min database, så kan jeg bruge en ekstra side som jeg skal koble til alle sider -
-    //derfor skriver jeg include, da den skal inkludere connection.php-filen på alle sider, så jeg kan få fat i min database på hvilken som helst php fil
-    include("connection.php");
-    include("functions.php");
-
+// Check if the user is logged in
+$user_data = null;
+if (isset($_SESSION['user_id'])) {
+    $user_data = check_login($con);
+}
 ?>
-
 
 
 <!doctype html>
@@ -19,9 +19,20 @@ session_start();
     <title>PHP Eksamen</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="./styles.css">
+
+    <style>
+        .img-edit {
+            width: 100%; 
+            max-width: 200px; 
+            height: 200px; 
+            object-fit: contain; 
+            display: block;
+            margin: 0 auto; 
+        }
+    </style>
 </head>
 <body>
-    <!-- navbar -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg text-black bg-danger-subtle fw-medium fs-5">
         <div class="container-fluid">
             <a class="nav-link active" aria-current="page" href="index.php">
@@ -42,18 +53,32 @@ session_start();
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Settings
                         </a>
-                        <ul class="dropdown-menu ">
-                            <li><a class="dropdown-item fw-medium" href="./kunde.php">Login</a></li>
+                        <ul class="dropdown-menu">
+                            <?php if ($user_data): ?>
+                                <li><a class="dropdown-item fw-medium" href="logout.php">Logout</a></li>
+                                <?php if ($user_data['admin'] == 1): ?>
+                                    <li><a class="dropdown-item fw-medium" href="admin.php">Admin</a></li>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <li><a class="dropdown-item fw-medium" href="login.php">Login</a></li>
+                            <?php endif; ?>
                             <li><a class="dropdown-item fw-medium" href="#">Help</a></li>
-                            <li><hr class="dropdown-divider "></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item fw-medium" href="#">FAQ</a></li>
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
+                <form class="d-flex me-auto w-50" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <?php if ($user_data): ?>
+                        <li class="nav-item">
+                            <a class="btn btn-danger" href="logout.php">Logout</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
             </div>
         </div>
     </nav>

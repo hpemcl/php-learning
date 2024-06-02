@@ -1,23 +1,27 @@
 <?php
-    include("connection.php");
-    include("functions.php");
+session_start();
+include("connection.php");
+include("functions.php");
 
-    //vi skal vide om man er log ind eller man ikke er, det er for at tjekke
+// Check if the user is logged in
+$user_data = null;
+if (isset($_SESSION['user_id'])) {
     $user_data = check_login($con);
+}
+?>
 
-    ?>
 
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PHP Eksamen</title>
+    <title>Kunde Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    <!-- navbar -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg text-black bg-danger-subtle fw-medium fs-5">
         <div class="container-fluid">
             <a class="nav-link active" aria-current="page" href="index.php">
@@ -38,28 +42,34 @@
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Settings
                         </a>
-                        <ul class="dropdown-menu ">
-                            <li><a class="dropdown-item fw-medium" href="./login.php">Login</a></li>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item fw-medium" href="logout.php">Log out</a></li>
                             <li><a class="dropdown-item fw-medium" href="#">Help</a></li>
-                            <li><hr class="dropdown-divider "></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item fw-medium" href="#">FAQ</a></li>
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
+                <form class="d-flex me-auto w-50" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="btn btn-danger" href="logout.php">Logout</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero section -->
-    <section class="text-center p-5 py-5">
-        <div class="container ">
-            <h1 class="display-4 fw-bold">KLunde</h1>
-            <p class="lead fw-medium">Discover amazing products at unbeatable prices.</p>
+    <!-- Welcome Section -->
+    <section class="text-start p-5 py-5">
+        <div class="container-fluid">
+            <h2 class="fw-bold">Welcome, <?= htmlspecialchars($user_data['user_name']); ?>!</h2>
+            <p class="lead fw-medium">Enjoy shopping with us. Find the best products at unbeatable prices.</p>
             <a href="#" class="btn text-uppercase fw-medium btn-custom-primary btn-lg">Shop Now</a>
+            <br><br>
         </div>
     </section>
 
